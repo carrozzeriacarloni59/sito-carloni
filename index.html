@@ -305,10 +305,7 @@
         }
         
         @media (max-width: 900px) {
-            .premium-hero-image { 
-    height: 300px; 
-    background-attachment: scroll; 
-}
+            .premium-hero-image { height: 300px; }
         }
 
         .service-box {
@@ -526,7 +523,8 @@
 
         /* RESPONSIVE */
         @media (max-width: 900px) {
-            .hero-title-main { font-size: 2.2rem; }
+            .hero-title-main { font-size: 1.8rem; line-height: 1.2; word-wrap: break-word; }
+            .hero-card { padding: 0 15px 40px 15px; }
             .section-title {
                 top: 60px; /* Coincide al millimetro con la barra blu da 60px */
                 border-radius: 0; /* Rimuove la stondatura in alto su mobile per un incastro perfetto */
@@ -992,7 +990,7 @@
                 <h2 class="section-title">Apertura e Gestione Pratica Sinistro</h2>
                 <p style="margin-bottom: 20px;">Compila il modulo sottostante per far gestire la tua pratica assicurativa direttamente dal nostro team legale e tecnico. Pensiamo a tutto noi, dall'accordo con il perito alla riparazione del veicolo.</p>
                 
-                <form action="https://formsubmit.co/angelocarloni@autocarrozzeriacarloni.it" method="POST">
+                <form id="form-sinistri">
                     <!-- Configurazione base formsubmit -->
                     <input type="hidden" name="_subject" value="Nuova Richiesta Pratica Sinistro dal Sito!">
                     <input type="hidden" name="_template" value="table">
@@ -1032,7 +1030,7 @@
                 <h2 class="section-title">Richiesta Preventivo Gratuito</h2>
                 <p style="margin-bottom: 20px;">Compila tutti i campi indicati per ricevere una stima precisa sui costi ed i tempi di riparazione per la tua vettura.</p>
                 
-                <form action="https://formsubmit.co/angelocarloni@autocarrozzeriacarloni.it" method="POST" enctype="multipart/form-data">
+                <form id="form-preventivi">
                     <!-- Configurazione base formsubmit -->
                     <input type="hidden" name="_subject" value="Nuova Richiesta Preventivo dal Sito!">
                     <input type="hidden" name="_template" value="table">
@@ -1299,12 +1297,50 @@
             window.alertMsg1 = isEnglish ? dict["Pratica del sinistro registrata con successo!"] : "Pratica del sinistro registrata con successo!";
         }
         
-        // Override original handleSinistroSubmit to support translation variables
-        function handleSinistroSubmit(event) {
-            event.preventDefault();
-            let msg = window.alertMsg1 || 'Pratica del sinistro registrata con successo!';
-            alert(msg);
+        // --- LOGICA INVIO FORM (AJAX) ---
+        function gestisciInvioForm(formId, btnIcon, btnTestoOriginale, messaggioSuccesso) {
+            const form = document.getElementById(formId);
+            if (!form) return;
+
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const btn = form.querySelector('button[type="submit"]');
+                
+                // Cambia il bottone in stato di caricamento
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Invio in corso...';
+                btn.disabled = true;
+
+                // Invia i dati in background (inclusa l'immagine) a FormSubmit
+                fetch("https://formsubmit.co/ajax/angelocarloni@autocarrozzeriacarloni.it", {
+                    method: "POST",
+                    body: new FormData(form)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    // Popup di successo
+                    alert(isEnglish ? dict[messaggioSuccesso] || messaggioSuccesso : messaggioSuccesso);
+                    form.reset(); // Pulisce i campi
+                    
+                    // Ripristina il bottone
+                    btn.innerHTML = `<i class="${btnIcon}"></i> ${btnTestoOriginale}`;
+                    btn.disabled = false;
+                    
+                    // Torna alla homepage
+                    showPage('home', document.querySelector('.nav-link')); 
+                })
+                .catch(error => {
+                    alert(isEnglish ? "Error sending request. Please try again." : "Errore nell'invio. Riprova più tardi.");
+                    btn.innerHTML = `<i class="${btnIcon}"></i> ${btnTestoOriginale}`;
+                    btn.disabled = false;
+                });
+            });
         }
+
+        // Inizializza entrambi i moduli al caricamento
+        window.addEventListener('DOMContentLoaded', () => {
+            gestisciInvioForm('form-sinistri', 'fa-solid fa-paper-plane', 'Invia Pratica Sinistro', 'Pratica del sinistro registrata con successo!');
+            gestisciInvioForm('form-preventivi', 'fa-solid fa-calculator', 'Richiedi Preventivo', 'Preventivo inviato con successo! Ti risponderemo entro 24 ore.');
+        });
 
         
         // Scroll Reveal Function (Premium Fade-in/Slide-up)
