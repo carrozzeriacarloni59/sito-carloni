@@ -305,7 +305,7 @@
         }
         
         @media (max-width: 900px) {
-            .premium-hero-image { height: 300px; background-attachment: scroll !important; }
+            .premium-hero-image { height: 300px; }
         }
         
         /* --- FIX DEFINITIVO PER iPHONE (iOS Safari e Chrome) --- */
@@ -754,7 +754,7 @@
 
     <!-- MOBILE HEADER -->
     <div class="mobile-header">
-        <h1>Autocarrozzeria <span>Carloni</span></h1>
+        <h1 onclick="showPage('home', document.querySelector('.nav-link'))" style="cursor: pointer;" title="Torna alla Home">Autocarrozzeria <span>Carloni</span></h1>
         <button class="mobile-toggle" onclick="toggleMobileMenu()">
             <i class="fa-solid fa-bars"></i>
         </button>
@@ -765,7 +765,7 @@
 
     <!-- SIDEBAR LEFT -->
     <aside class="sidebar">
-        <div class="brand-header">
+        <div class="brand-header" onclick="showPage('home', document.querySelector('.nav-link'))" style="cursor: pointer;" title="Torna alla Home">
             <h1>Autocarrozzeria<br><span>Carloni</span></h1>
         </div>
         <ul class="nav-menu">
