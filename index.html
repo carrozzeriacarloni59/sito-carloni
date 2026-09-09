@@ -305,7 +305,7 @@
         }
         
         @media (max-width: 900px) {
-            .premium-hero-image { height: 300px; }
+            .premium-hero-image { height: 300px; background-attachment: scroll !important; background-position: center !important; }
         }
 
         .service-box {
@@ -990,7 +990,7 @@
                 <h2 class="section-title">Apertura e Gestione Pratica Sinistro</h2>
                 <p style="margin-bottom: 20px;">Compila il modulo sottostante per far gestire la tua pratica assicurativa direttamente dal nostro team legale e tecnico. Pensiamo a tutto noi, dall'accordo con il perito alla riparazione del veicolo.</p>
                 
-                <form id="form-sinistri">
+                <form id="form-sinistri" action="https://formsubmit.co/angelocarloni@autocarrozzeriacarloni.it" method="POST" target="hidden_iframe">
                     <!-- Configurazione base formsubmit -->
                     <input type="hidden" name="_subject" value="Nuova Richiesta Pratica Sinistro dal Sito!">
                     <input type="hidden" name="_template" value="table">
@@ -1030,7 +1030,7 @@
                 <h2 class="section-title">Richiesta Preventivo Gratuito</h2>
                 <p style="margin-bottom: 20px;">Compila tutti i campi indicati per ricevere una stima precisa sui costi ed i tempi di riparazione per la tua vettura.</p>
                 
-                <form id="form-preventivi">
+                <form id="form-preventivi" action="https://formsubmit.co/angelocarloni@autocarrozzeriacarloni.it" method="POST" enctype="multipart/form-data" target="hidden_iframe">
                     <!-- Configurazione base formsubmit -->
                     <input type="hidden" name="_subject" value="Nuova Richiesta Preventivo dal Sito!">
                     <input type="hidden" name="_template" value="table">
@@ -1297,49 +1297,55 @@
             window.alertMsg1 = isEnglish ? dict["Pratica del sinistro registrata con successo!"] : "Pratica del sinistro registrata con successo!";
         }
         
-        // --- LOGICA INVIO FORM (AJAX) ---
-        function gestisciInvioForm(formId, btnIcon, btnTestoOriginale, messaggioSuccesso) {
+        // --- LOGICA INVIO FORM (IFRAME INVISIBILE) ---
+        let formInviato = false;
+        let formAttivo = null;
+
+        function gestisciInvioForm(formId) {
             const form = document.getElementById(formId);
             if (!form) return;
-
-            form.addEventListener('submit', function(e) {
-                e.preventDefault();
+            
+            form.addEventListener('submit', function() {
+                formInviato = true;
+                formAttivo = formId;
                 const btn = form.querySelector('button[type="submit"]');
-                
-                // Cambia il bottone in stato di caricamento
+                btn.dataset.original = btn.innerHTML;
                 btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Invio in corso...';
                 btn.disabled = true;
+                // Lasciamo che il modulo prosegua l'invio verso l'iframe nascosto
+            });
+        }
 
-                // Invia i dati in background (inclusa l'immagine) a FormSubmit
-                fetch("https://formsubmit.co/ajax/angelocarloni@autocarrozzeriacarloni.it", {
-                    method: "POST",
-                    body: new FormData(form)
-                })
-                .then(response => response.json())
-                .then(data => {
-                    // Popup di successo
-                    alert(isEnglish ? dict[messaggioSuccesso] || messaggioSuccesso : messaggioSuccesso);
+        function frameCaricato() {
+            if (formInviato) {
+                let msg = "Inviato!";
+                if (formAttivo === 'form-sinistri') msg = 'Pratica del sinistro registrata con successo!';
+                if (formAttivo === 'form-preventivi') msg = 'Preventivo inviato con successo! Ti risponderemo entro 24 ore.';
+                
+                // Piccolo ritardo per permettere fluidità
+                setTimeout(() => {
+                    alert(isEnglish ? dict[msg] || msg : msg);
+                    
+                    const form = document.getElementById(formAttivo);
                     form.reset(); // Pulisce i campi
                     
-                    // Ripristina il bottone
-                    btn.innerHTML = `<i class="${btnIcon}"></i> ${btnTestoOriginale}`;
+                    const btn = form.querySelector('button[type="submit"]');
+                    btn.innerHTML = btn.dataset.original;
                     btn.disabled = false;
                     
                     // Torna alla homepage
-                    showPage('home', document.querySelector('.nav-link')); 
-                })
-                .catch(error => {
-                    alert(isEnglish ? "Error sending request. Please try again." : "Errore nell'invio. Riprova più tardi.");
-                    btn.innerHTML = `<i class="${btnIcon}"></i> ${btnTestoOriginale}`;
-                    btn.disabled = false;
-                });
-            });
+                    showPage('home', document.querySelector('.nav-link'));
+                    
+                    formInviato = false;
+                    formAttivo = null;
+                }, 500);
+            }
         }
 
         // Inizializza entrambi i moduli al caricamento
         window.addEventListener('DOMContentLoaded', () => {
-            gestisciInvioForm('form-sinistri', 'fa-solid fa-paper-plane', 'Invia Pratica Sinistro', 'Pratica del sinistro registrata con successo!');
-            gestisciInvioForm('form-preventivi', 'fa-solid fa-calculator', 'Richiedi Preventivo', 'Preventivo inviato con successo! Ti risponderemo entro 24 ore.');
+            gestisciInvioForm('form-sinistri');
+            gestisciInvioForm('form-preventivi');
         });
 
         
@@ -1433,6 +1439,10 @@
         }
     </script>
 
+
+    
+    <!-- IFRAME INVISIBILE PER FORMSUBMIT -->
+    <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;" onload="frameCaricato()"></iframe>
 
     <!-- LIGHTBOX PER LE FOTO -->
     <div id="lightbox" onclick="closeLightbox()">
