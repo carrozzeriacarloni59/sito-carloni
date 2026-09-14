@@ -651,6 +651,125 @@
         .lang-text-desktop { display: inline; }
         .lang-text-mobile { display: none; }
 
+                /* --- PREMIUM SCROLL REVEAL ANIMATIONS (Apple Style) --- */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s cubic-bezier(0.5, 0, 0, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Cascade effects for grids */
+        .services-grid .service-box:nth-child(1) { transition-delay: 0.1s; }
+        .services-grid .service-box:nth-child(2) { transition-delay: 0.2s; }
+        .services-grid .service-box:nth-child(3) { transition-delay: 0.3s; }
+        .services-grid .service-box:nth-child(4) { transition-delay: 0.4s; }
+
+        .gallery-grid .gallery-item:nth-child(1) { transition-delay: 0.1s; }
+        .gallery-grid .gallery-item:nth-child(2) { transition-delay: 0.2s; }
+        .gallery-grid .gallery-item:nth-child(3) { transition-delay: 0.3s; }
+
+        .gallery-item {
+            cursor: pointer;
+            transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.4s ease;
+        }
+        .gallery-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+            z-index: 10;
+        }
+
+        /* Lightbox */
+        #lightbox {
+            display: none; 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            background: rgba(10, 15, 29, 0.95); 
+            z-index: 99999; 
+            align-items: center; 
+            justify-content: center; 
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        #lightbox.show {
+            opacity: 1;
+        }
+        #lightbox-close {
+            position: absolute; 
+            top: 30px; 
+            right: 40px; 
+            color: white; 
+            font-size: 40px; 
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        #lightbox-close:hover {
+            transform: scale(1.2);
+            color: var(--accent-red);
+        }
+        #lightbox-img {
+            max-width: 90%; 
+            max-height: 90%; 
+            border-radius: 8px; 
+            box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+            transform: scale(0.95);
+            transition: transform 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+        #lightbox.show #lightbox-img {
+            transform: scale(1);
+        }
+
+        /* --- SUBPAGE HERO WITH VIDEO --- */
+        .subpage-hero-wrapper {
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+        .subpage-video-bg {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            object-fit: cover;
+            z-index: 0;
+            filter: blur(4px); /* Effetto sfocato */
+            transform: scale(1.05); /* Evita i bordi bianchi causati dal blur */
+        }
+        .subpage-hero-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(135deg, rgba(10, 15, 29, 0.95) 0%, rgba(10, 15, 29, 0.5) 100%);
+            z-index: 1;
+        }
+        .subpage-hero-content {
+            position: relative;
+            z-index: 2;
+            padding: 50px 40px;
+            color: var(--white);
+        }
+        .subpage-hero-content h2 {
+            font-size: 2.2rem;
+            margin-bottom: 15px;
+            color: var(--white);
+            border-bottom: 3px solid var(--accent-red);
+            display: inline-block;
+            padding-bottom: 5px;
+        }
+        .subpage-hero-content p {
+            font-size: 1.15rem;
+            line-height: 1.7;
+            max-width: 800px;
+            text-shadow: 1px 1px 5px rgba(0,0,0,0.5);
+        }
+
         /* Floating Quick Action Buttons */
         .quick-actions-bar {
             position: fixed;
@@ -1387,9 +1506,9 @@
             for (var i = 0; i < reveals.length; i++) {
                 var windowHeight = window.innerHeight;
                 var elementTop = reveals[i].getBoundingClientRect().top;
-                var elementVisible = 30; // Quanti pixel devono entrare prima che parta l'animazione
+                var elementVisible = 20; // Quanti pixel devono entrare prima che parta l'animazione
                 
-                if (elementTop < windowHeight - elementVisible) {
+                if (elementTop < windowHeight - elementVisible || elementTop === 0) {
                     reveals[i].classList.add("active");
                 }
             }
@@ -1412,8 +1531,8 @@
             submenu.classList.toggle('open');
         }
 
-        // Navigate between pages
-        function showPage(pageId, element) {
+        // Navigate between pages with full Browser History & Back button support
+        function showPage(pageId, element, pushToHistory = true) {
             const pages = document.querySelectorAll('.page-section');
             pages.forEach(p => p.classList.remove('active'));
 
@@ -1427,6 +1546,13 @@
 
             if (element) {
                 element.classList.add('active');
+            } else {
+                // Find matching link if element was not passed (e.g. from back button or hash)
+                const matchingLink = Array.from(links).find(l => {
+                    const onclickStr = l.getAttribute('onclick') || '';
+                    return onclickStr.includes(`'${pageId}'`);
+                });
+                if (matchingLink) matchingLink.classList.add('active');
             }
 
             if (window.innerWidth <= 900) {
@@ -1434,9 +1560,42 @@
                 document.querySelector('.sidebar-overlay').classList.remove('active');
             }
 
+            // Sync with browser history so Back button works everywhere
+            if (pushToHistory) {
+                const currentHash = window.location.hash.replace('#', '');
+                if (currentHash !== pageId) {
+                    history.pushState({ pageId: pageId }, '', pageId === 'home' ? window.location.pathname : '#' + pageId);
+                }
+            }
+
             window.scrollTo(0, 0);
             setTimeout(reveal, 50);
+            setTimeout(reveal, 200);
         }
+
+        // Handle Browser Back / Forward buttons & Smartphone back gesture
+        window.addEventListener('popstate', function(event) {
+            let targetPageId = 'home';
+            if (event.state && event.state.pageId) {
+                targetPageId = event.state.pageId;
+            } else if (window.location.hash) {
+                targetPageId = window.location.hash.replace('#', '');
+            }
+            if (document.getElementById(targetPageId)) {
+                showPage(targetPageId, null, false);
+            }
+        });
+
+        // Load correct section on startup if URL contains hash (or set initial state)
+        window.addEventListener('DOMContentLoaded', () => {
+            const initialHash = window.location.hash.replace('#', '');
+            if (initialHash && document.getElementById(initialHash)) {
+                showPage(initialHash, null, false);
+                history.replaceState({ pageId: initialHash }, '', '#' + initialHash);
+            } else {
+                history.replaceState({ pageId: 'home' }, '', window.location.pathname);
+            }
+        });
 
         function navigateToSub(subId) {
             const submenu = document.getElementById('submenu-interventi');
