@@ -757,60 +757,88 @@
             transform: scale(1);
         }
 
-                /* Floating WhatsApp Button - Circular & aligned beside Cookiebot icon */
-        .whatsapp-float {
+                        /* Floating Quick Action Buttons - Aligned beside Cookiebot icon inside sidebar */
+        .quick-actions-bar {
             position: fixed;
             bottom: 18px;
             left: 75px;
-            width: 46px;
-            height: 46px;
-            background-color: #25d366;
-            color: white;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 9999;
+        }
+
+        .quick-action-btn {
+            width: 44px;
+            height: 44px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.5rem;
+            color: white;
+            font-size: 1.35rem;
             text-decoration: none;
             cursor: pointer;
-            z-index: 9999;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.35);
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        .whatsapp-float span {
-            display: none;
+        .quick-action-btn:hover {
+            transform: scale(1.15);
+            color: white;
         }
 
-        .whatsapp-float:hover {
-            transform: scale(1.12);
+        .btn-qa-whatsapp {
+            background-color: #25d366;
+        }
+        .btn-qa-whatsapp:hover {
             background-color: #20ba5a;
-            color: white;
             box-shadow: 0 6px 20px rgba(37, 211, 102, 0.45);
         }
 
-        .whatsapp-float i {
-            font-size: 1.5rem;
-            margin: 0;
+        .btn-qa-instagram {
+            background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+        }
+        .btn-qa-instagram:hover {
+            box-shadow: 0 6px 20px rgba(225, 48, 108, 0.5);
+        }
+
+        .btn-qa-email {
+            background-color: #ea4335;
+        }
+        .btn-qa-email:hover {
+            background-color: #d93025;
+            box-shadow: 0 6px 20px rgba(234, 67, 53, 0.5);
         }
 
         @media (max-width: 900px) {
-            .whatsapp-float {
+            .quick-actions-bar {
                 left: 70px;
                 bottom: 16px;
-                width: 44px;
-                height: 44px;
-                font-size: 1.35rem;
+                gap: 8px;
+            }
+            .quick-action-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 1.2rem;
             }
         }
     </style>
 </head>
 <body>
 
-    <!-- FLOATING WHATSAPP BUTTON -->
-    <a href="https://wa.me/393661534027?text=Ciao%2C%20vorrei%20informazioni%20per%20un%20preventivo" target="_blank" rel="noopener noreferrer" class="whatsapp-float" aria-label="Contattaci su WhatsApp">
-        <i class="fa-brands fa-whatsapp"></i> <span>WhatsApp</span>
-    </a>
+    <!-- FLOATING QUICK ACTION BUTTONS (WhatsApp, Instagram, Gmail) -->
+    <div class="quick-actions-bar">
+        <a href="https://wa.me/393661534027?text=Ciao%2C%20vorrei%20informazioni%20per%20un%20preventivo" target="_blank" rel="noopener noreferrer" class="quick-action-btn btn-qa-whatsapp" title="Scrivici su WhatsApp" aria-label="WhatsApp">
+            <i class="fa-brands fa-whatsapp"></i>
+        </a>
+        <a href="https://instagram.com/angelo_carloni_" target="_blank" rel="noopener noreferrer" class="quick-action-btn btn-qa-instagram" title="Seguici su Instagram" aria-label="Instagram">
+            <i class="fa-brands fa-instagram"></i>
+        </a>
+        <a href="mailto:angelocarloni@autocarrozzeriacarloni.it?subject=Richiesta%20informazioni%20Autocarrozzeria%20Carloni" class="quick-action-btn btn-qa-email" title="Inviaci un'Email" aria-label="Email">
+            <i class="fa-solid fa-envelope"></i>
+        </a>
+    </div>
 
 
     <!-- TRANSLATE BUTTON -->
