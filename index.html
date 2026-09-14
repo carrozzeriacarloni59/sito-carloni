@@ -1575,6 +1575,12 @@
 
         // Handle Browser Back / Forward buttons & Smartphone back gesture
         window.addEventListener('popstate', function(event) {
+            // Se c'è una foto aperta a schermo intero, chiudila e resta nella sezione corrente
+            if (isLightboxOpen) {
+                closeLightboxDOM();
+                return;
+            }
+
             let targetPageId = 'home';
             if (event.state && event.state.pageId) {
                 targetPageId = event.state.pageId;
@@ -1614,25 +1620,49 @@
             });
         }
 
-        // --- LOGICA LIGHTBOX ---
+        // --- LOGICA LIGHTBOX CON SUPPORTO TASTO INDIETRO ---
+        let isLightboxOpen = false;
+
         function openLightbox(imgSrc) {
             const lightbox = document.getElementById('lightbox');
             document.getElementById('lightbox-img').src = imgSrc;
             lightbox.style.display = 'flex';
             setTimeout(() => lightbox.classList.add('show'), 10);
+            
+            isLightboxOpen = true;
+            // Aggiungiamo uno stato alla cronologia dedicato alla visualizzazione dell'immagine
+            history.pushState({ lightbox: true }, '', window.location.href);
         }
         
-        function closeLightbox() {
+        function closeLightboxDOM() {
             const lightbox = document.getElementById('lightbox');
             lightbox.classList.remove('show');
-            setTimeout(() => lightbox.style.display = 'none', 300);
+            setTimeout(() => {
+                lightbox.style.display = 'none';
+                document.getElementById('lightbox-img').src = '';
+            }, 300);
+            isLightboxOpen = false;
         }
+
+        function closeLightbox() {
+            if (isLightboxOpen) {
+                // Facciamo scattare l'indietro della cronologia, che chiuderà il lightbox in popstate
+                history.back();
+            }
+        }
+
+        // Chiusura da tastiera (ESC su PC)
+        window.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && isLightboxOpen) {
+                closeLightbox();
+            }
+        });
     </script>
 
     <!-- LIGHTBOX PER LE FOTO -->
     <div id="lightbox" onclick="closeLightbox()">
         <span id="lightbox-close">&times;</span>
-        <img id="lightbox-img" src="">
+        <img id="lightbox-img" src="" onclick="event.stopPropagation()">
     </div>
 </body>
 </html>
