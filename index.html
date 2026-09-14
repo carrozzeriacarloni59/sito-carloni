@@ -1337,6 +1337,15 @@
                 })
                 .then(response => response.json())
                 .then(data => {
+                    // Invio evento personalizzato a Google Analytics (Lead generato)
+                    if (typeof gtag === 'function') {
+                        gtag('event', 'generate_lead', {
+                            'event_category': 'Moduli',
+                            'event_label': formId === 'form-preventivi' ? 'Richiesta Preventivo' : 'Pratica Sinistro',
+                            'form_id': formId
+                        });
+                    }
+
                     // Popup di successo
                     alert(isEnglish ? dict[messaggioSuccesso] || messaggioSuccesso : messaggioSuccesso);
                     form.reset(); // Pulisce i campi
