@@ -754,9 +754,69 @@
         #lightbox.show #lightbox-img {
             transform: scale(1);
         }
+
+        /* Floating WhatsApp Button */
+        .whatsapp-float {
+            position: fixed;
+            bottom: 25px;
+            left: 25px;
+            background-color: #25d366;
+            color: white;
+            border-radius: 50px;
+            padding: 10px 20px;
+            font-size: 1rem;
+            font-weight: bold;
+            text-decoration: none;
+            cursor: pointer;
+            z-index: 9999;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .whatsapp-float:hover {
+            transform: scale(1.05);
+            background-color: #20ba5a;
+            color: white;
+            box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
+        }
+
+        .whatsapp-float i {
+            font-size: 1.3rem;
+        }
+
+        @media (max-width: 600px) {
+            .whatsapp-float span {
+                display: none;
+            }
+            .whatsapp-float {
+                padding: 12px;
+                border-radius: 50%;
+                width: 48px;
+                height: 48px;
+                justify-content: center;
+                bottom: 20px;
+                left: 20px;
+            }
+            .whatsapp-float i {
+                margin: 0;
+            }
+            .translate-btn {
+                bottom: 20px;
+                right: 20px;
+            }
+        }
     </style>
 </head>
 <body>
+
+    <!-- FLOATING WHATSAPP BUTTON -->
+    <a href="https://wa.me/393661534027?text=Ciao%2C%20vorrei%20informazioni%20per%20un%20preventivo" target="_blank" rel="noopener noreferrer" class="whatsapp-float" aria-label="Contattaci su WhatsApp">
+        <i class="fa-brands fa-whatsapp"></i> <span>WhatsApp</span>
+    </a>
+
 
     <!-- TRANSLATE BUTTON -->
     <button class="translate-btn" onclick="toggleLanguage()">
@@ -1333,22 +1393,10 @@
                 // Invia i dati in background (inclusa l'immagine) a FormSubmit
                 fetch("https://formsubmit.co/ajax/angelocarloni@autocarrozzeriacarloni.it", {
                     method: "POST",
-                    headers: {
-                        'Accept': 'application/json'
-                    },
                     body: new FormData(form)
                 })
                 .then(response => response.json())
                 .then(data => {
-                    // Invio evento personalizzato a Google Analytics (Lead generato)
-                    if (typeof gtag === 'function') {
-                        gtag('event', 'generate_lead', {
-                            'event_category': 'Moduli',
-                            'event_label': formId === 'form-preventivi' ? 'Richiesta Preventivo' : 'Pratica Sinistro',
-                            'form_id': formId
-                        });
-                    }
-
                     // Popup di successo
                     alert(isEnglish ? dict[messaggioSuccesso] || messaggioSuccesso : messaggioSuccesso);
                     form.reset(); // Pulisce i campi
@@ -1368,18 +1416,10 @@
             });
         }
 
-        // Inizializza cronologia al primo caricamento
+        // Inizializza entrambi i moduli al caricamento
         window.addEventListener('DOMContentLoaded', () => {
             gestisciInvioForm('form-sinistri', 'fa-solid fa-paper-plane', 'Invia Pratica Sinistro', 'Pratica del sinistro registrata con successo!');
             gestisciInvioForm('form-preventivi', 'fa-solid fa-calculator', 'Richiedi Preventivo', 'Preventivo inviato con successo! Ti risponderemo entro 24 ore.');
-
-            const initialHash = window.location.hash.replace('#', '');
-            if (initialHash && document.getElementById(initialHash)) {
-                history.replaceState({ pageId: initialHash }, '', '#' + initialHash);
-                showPage(initialHash, null, false);
-            } else {
-                history.replaceState({ pageId: 'home' }, '', window.location.pathname);
-            }
         });
 
         
@@ -1415,17 +1455,7 @@
         }
 
         // Navigate between pages
-                // --- GESTIONE CRONOLOGIA E TASTO INDIETRO (History API) ---
-        function updateActiveLink(pageId) {
-            const links = document.querySelectorAll('.nav-link, .submenu-link');
-            links.forEach(l => l.classList.remove('active'));
-            const matchingLink = document.querySelector(`.nav-link[onclick*="'${pageId}'"], .submenu-link[onclick*="'${pageId}'"]`);
-            if (matchingLink) {
-                matchingLink.classList.add('active');
-            }
-        }
-
-        function showPage(pageId, element, pushToHistory = true) {
+        function showPage(pageId, element) {
             const pages = document.querySelectorAll('.page-section');
             pages.forEach(p => p.classList.remove('active'));
 
@@ -1434,70 +1464,26 @@
                 targetPage.classList.add('active');
             }
 
-            if (element) {
-                const links = document.querySelectorAll('.nav-link, .submenu-link');
-                links.forEach(l => l.classList.remove('active'));
-                element.classList.add('active');
-            } else {
-                updateActiveLink(pageId);
-            }
+            const links = document.querySelectorAll('.nav-link, .submenu-link');
+            links.forEach(l => l.classList.remove('active'));
 
-            // Se è una sottovoce di interventi, apri il sottomenu
-            if (['riparazione', 'verniciatura', 'lucidatura'].includes(pageId)) {
-                const submenu = document.getElementById('submenu-interventi');
-                if (submenu) submenu.classList.add('open');
+            if (element) {
+                element.classList.add('active');
             }
 
             if (window.innerWidth <= 900) {
-                const sidebar = document.querySelector('.sidebar');
-                const overlay = document.querySelector('.sidebar-overlay');
-                if (sidebar) sidebar.classList.remove('active');
-                if (overlay) overlay.classList.remove('active');
+                document.querySelector('.sidebar').classList.remove('active');
+                document.querySelector('.sidebar-overlay').classList.remove('active');
             }
 
             window.scrollTo(0, 0);
             setTimeout(reveal, 50);
-
-            // Aggiunge la pagina alla cronologia del browser
-            if (pushToHistory) {
-                const currentHash = window.location.hash.replace('#', '');
-                if (currentHash !== pageId) {
-                    history.pushState({ pageId: pageId }, '', '#' + pageId);
-                }
-            }
-
-            // Notifica Google Analytics del cambio pagina/sezione (Virtual Pageview)
-            if (typeof gtag === 'function') {
-                gtag('event', 'page_view', {
-                    page_title: pageId.charAt(0).toUpperCase() + pageId.slice(1),
-                    page_path: '/' + (pageId === 'home' ? '' : '#' + pageId)
-                });
-            }
         }
 
-        // Gestione del tasto indietro / avanti dello smartphone e del browser
-        window.addEventListener('popstate', function(event) {
-            // Se il lightbox delle foto è aperto, chiudilo prima di cambiare pagina
-            const lightbox = document.getElementById('lightbox');
-            if (lightbox && lightbox.style.display === 'flex') {
-                closeLightbox(false);
-                return;
-            }
-
-            if (event.state && event.state.pageId) {
-                showPage(event.state.pageId, null, false);
-            } else {
-                const hash = window.location.hash.replace('#', '');
-                if (hash && document.getElementById(hash)) {
-                    showPage(hash, null, false);
-                } else {
-                    showPage('home', null, false);
-                }
-            }
-        });
-
         function navigateToSub(subId) {
-            showPage(subId, null, true);
+            const submenu = document.getElementById('submenu-interventi');
+            submenu.classList.add('open');
+            showPage(subId, null);
         }
 
         function filterReviews(service) {
@@ -1511,22 +1497,18 @@
             });
         }
 
-        // --- LOGICA LIGHTBOX CON SUPPORTO TASTO INDIETRO ---
+        // --- LOGICA LIGHTBOX ---
         function openLightbox(imgSrc) {
             const lightbox = document.getElementById('lightbox');
             document.getElementById('lightbox-img').src = imgSrc;
             lightbox.style.display = 'flex';
             setTimeout(() => lightbox.classList.add('show'), 10);
-            history.pushState({ isLightbox: true }, '', window.location.hash || '#');
         }
         
-        function closeLightbox(fromButton = true) {
+        function closeLightbox() {
             const lightbox = document.getElementById('lightbox');
             lightbox.classList.remove('show');
             setTimeout(() => lightbox.style.display = 'none', 300);
-            if (fromButton && history.state && history.state.isLightbox) {
-                history.back();
-            }
         }
     </script>
 
