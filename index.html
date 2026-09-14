@@ -14,6 +14,9 @@
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="color-scheme" content="light">
+    <meta name="theme-color" content="#f4f6f8">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <title>Autocarrozzeria Carloni</title>
     <!-- Favicon (Icona nella tab del browser) -->
     <link rel="icon" href="logo.jpg" type="image/jpeg">
@@ -39,19 +42,15 @@
 
         html {
             background-color: var(--light-bg);
-            height: 100%;
             -webkit-text-size-adjust: 100%;
         }
 
         body {
-            display: flex;
             background-color: var(--light-bg);
             color: var(--dark-text);
-            min-height: 100%;
-            min-height: 100dvh;
-            overflow-x: hidden;
             margin: 0;
             padding: 0;
+            width: 100%;
         }
 
         /* Mobile Header & Overlay */
@@ -167,11 +166,10 @@
         /* Main Content Container */
         .main-content {
             margin-left: var(--sidebar-width);
-            flex-grow: 1;
             width: calc(100% - var(--sidebar-width));
             background-color: var(--light-bg);
             min-height: 100vh;
-            min-height: 100dvh;
+            overflow-x: hidden;
         }
 
         .page-section {
@@ -597,6 +595,7 @@
                 transform: translateX(-100%);
                 z-index: 1000;
                 top: 60px; /* Spinge il menu esattamente sotto la barra blu */
+                height: calc(100dvh - 60px);
                 height: calc(100vh - 60px);
             }
             .sidebar.active { transform: translateX(0); }
@@ -606,6 +605,7 @@
                 top: 60px; /* L'overlay parte sotto la barra blu */
                 left: 0;
                 width: 100%;
+                height: calc(100dvh - 60px);
                 height: calc(100vh - 60px);
                 background: rgba(0,0,0,0.5);
                 z-index: 950;
@@ -709,7 +709,7 @@
         @media (max-width: 900px) {
             .quick-actions-bar {
                 left: 65px;
-                bottom: 14px;
+                bottom: calc(16px + env(safe-area-inset-bottom, 0px));
                 gap: 8px;
             }
             .quick-action-btn {
@@ -732,7 +732,7 @@
             }
 
             .translate-btn {
-                bottom: 14px;
+                bottom: calc(16px + env(safe-area-inset-bottom, 0px));
                 right: 14px;
                 height: 38px;
                 min-width: 48px;
