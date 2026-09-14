@@ -13,7 +13,7 @@
       gtag('config', 'G-ST8TM6GKM4');
     </script>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Autocarrozzeria Carloni</title>
     <!-- Favicon (Icona nella tab del browser) -->
     <link rel="icon" href="logo.jpg" type="image/jpeg">
@@ -37,12 +37,21 @@
             font-family: 'Montserrat', sans-serif;
         }
 
+        html {
+            background-color: var(--light-bg);
+            height: 100%;
+            -webkit-text-size-adjust: 100%;
+        }
+
         body {
             display: flex;
             background-color: var(--light-bg);
             color: var(--dark-text);
-            min-height: 100vh;
+            min-height: 100%;
+            min-height: 100dvh;
             overflow-x: hidden;
+            margin: 0;
+            padding: 0;
         }
 
         /* Mobile Header & Overlay */
@@ -160,6 +169,9 @@
             margin-left: var(--sidebar-width);
             flex-grow: 1;
             width: calc(100% - var(--sidebar-width));
+            background-color: var(--light-bg);
+            min-height: 100vh;
+            min-height: 100dvh;
         }
 
         .page-section {
@@ -541,6 +553,7 @@
             width: 100%;
             height: 100%;
             border: 0;
+            display: block;
         }
 
         /* RESPONSIVE */
@@ -602,9 +615,9 @@
                 margin-left: 0;
                 width: 100%;
             }
-            .page-section { padding: 100px 20px 30px 20px; }
+            .page-section { padding: 80px 20px 70px 20px; }
             #home.page-section { padding: 60px 0 0 0; }
-            .page-content-padding { padding: 20px; }
+            .page-content-padding { padding: 20px 20px 70px 20px; }
         }
     
                 /* Translation Button */
