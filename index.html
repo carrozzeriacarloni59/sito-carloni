@@ -607,10 +607,10 @@
             .page-content-padding { padding: 20px; }
         }
     
-        /* Translation Button */
+                /* Translation Button */
         .translate-btn {
             position: fixed;
-            bottom: 25px;
+            bottom: 18px;
             right: 25px;
             background-color: var(--primary-blue);
             color: white;
@@ -625,7 +625,7 @@
             transition: all 0.3s ease;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
 
         .translate-btn:hover {
@@ -633,131 +633,12 @@
             background-color: var(--accent-red);
             border-color: var(--primary-blue);
         }
-        .translate-btn i { font-size: 1.2rem; }
+        .translate-btn i { font-size: 1.1rem; }
 
-    
-        /* --- PREMIUM SCROLL REVEAL ANIMATIONS (Apple Style) --- */
-        .reveal {
-            opacity: 0;
-            transform: translateY(40px);
-            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
-        }
-        .reveal.active {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        
-        /* Cascade effects for grids */
-        .services-grid .service-box:nth-child(1) { transition-delay: 0.1s; }
-        .services-grid .service-box:nth-child(2) { transition-delay: 0.2s; }
-        .services-grid .service-box:nth-child(3) { transition-delay: 0.3s; }
-        .services-grid .service-box:nth-child(4) { transition-delay: 0.4s; }
+        .lang-text-desktop { display: inline; }
+        .lang-text-mobile { display: none; }
 
-        .gallery-grid .gallery-item:nth-child(1) { transition-delay: 0.1s; }
-        .gallery-grid .gallery-item:nth-child(2) { transition-delay: 0.2s; }
-        .gallery-grid .gallery-item:nth-child(3) { transition-delay: 0.3s; }
-
-    
-        /* --- SUBPAGE HERO WITH VIDEO --- */
-        .subpage-hero-wrapper {
-            position: relative;
-            border-radius: 8px;
-            overflow: hidden;
-            margin-bottom: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-        }
-        .subpage-video-bg {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            object-fit: cover;
-            z-index: 0;
-            filter: blur(4px); /* Effetto sfocato richiesto */
-            transform: scale(1.05); /* Evita i bordi bianchi causati dal blur */
-        }
-        .subpage-hero-overlay {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(135deg, rgba(10, 15, 29, 0.95) 0%, rgba(10, 15, 29, 0.4) 100%);
-            z-index: 1;
-        }
-        .subpage-hero-content {
-            position: relative;
-            z-index: 2;
-            padding: 50px 40px;
-            color: var(--white);
-        }
-        .subpage-hero-content h2 {
-            font-size: 2.2rem;
-            margin-bottom: 15px;
-            color: var(--white);
-            border-bottom: 3px solid var(--accent-red);
-            display: inline-block;
-            padding-bottom: 5px;
-        }
-        .subpage-hero-content p {
-            font-size: 1.15rem;
-            line-height: 1.7;
-            max-width: 800px;
-            text-shadow: 1px 1px 5px rgba(0,0,0,0.5);
-        }
-
-    
-        .gallery-item {
-            cursor: pointer;
-            transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.4s ease;
-        }
-        .gallery-item:hover {
-            transform: scale(1.05);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
-            z-index: 10;
-        }
-
-        /* Lightbox */
-        #lightbox {
-            display: none; 
-            position: fixed; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 100%; 
-            background: rgba(10, 15, 29, 0.95); 
-            z-index: 99999; 
-            align-items: center; 
-            justify-content: center; 
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-        #lightbox.show {
-            opacity: 1;
-        }
-        #lightbox-close {
-            position: absolute; 
-            top: 30px; 
-            right: 40px; 
-            color: white; 
-            font-size: 40px; 
-            cursor: pointer;
-            transition: transform 0.3s ease;
-        }
-        #lightbox-close:hover {
-            transform: scale(1.2);
-            color: var(--accent-red);
-        }
-        #lightbox-img {
-            max-width: 90%; 
-            max-height: 90%; 
-            border-radius: 8px; 
-            box-shadow: 0 15px 40px rgba(0,0,0,0.5);
-            transform: scale(0.95);
-            transition: transform 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
-        }
-        #lightbox.show #lightbox-img {
-            transform: scale(1);
-        }
-
-                        /* Floating Quick Action Buttons - Aligned beside Cookiebot icon inside sidebar */
+        /* Floating Quick Action Buttons */
         .quick-actions-bar {
             position: fixed;
             bottom: 18px;
@@ -811,16 +692,39 @@
             box-shadow: 0 6px 20px rgba(234, 67, 53, 0.5);
         }
 
+        /* Mobile Optimization for bottom bar (WhatsApp, Mail & Translate) */
         @media (max-width: 900px) {
             .quick-actions-bar {
-                left: 70px;
-                bottom: 16px;
+                left: 65px;
+                bottom: 14px;
                 gap: 8px;
             }
             .quick-action-btn {
-                width: 40px;
-                height: 40px;
-                font-size: 1.2rem;
+                width: 38px;
+                height: 38px;
+                font-size: 1.15rem;
+            }
+            /* Hide Instagram on smartphone to save space */
+            .btn-qa-instagram {
+                display: none !important;
+            }
+
+            /* Compact & aligned translate button on mobile */
+            .lang-text-desktop { display: none; }
+            .lang-text-mobile { display: inline; font-size: 0.8rem; letter-spacing: 0.5px; }
+
+            .translate-btn {
+                bottom: 14px;
+                right: 14px;
+                height: 38px;
+                padding: 0 12px;
+                font-size: 0.82rem;
+                gap: 6px;
+                border-width: 1.5px;
+                box-shadow: 0 3px 10px rgba(0,0,0,0.25);
+            }
+            .translate-btn i {
+                font-size: 0.95rem;
             }
         }
     </style>
@@ -842,8 +746,10 @@
 
 
     <!-- TRANSLATE BUTTON -->
-    <button class="translate-btn" onclick="toggleLanguage()">
-        <i class="fa-solid fa-language"></i> <span id="lang-text">English</span>
+    <button class="translate-btn" onclick="toggleLanguage()" aria-label="Cambia Lingua">
+        <i class="fa-solid fa-language"></i>
+        <span class="lang-text-desktop" id="lang-text-desktop">English</span>
+        <span class="lang-text-mobile" id="lang-text-mobile">ENG</span>
     </button>
 
     <!-- MOBILE HEADER -->
@@ -1391,7 +1297,10 @@
 
         function toggleLanguage() {
             isEnglish = !isEnglish;
-            document.getElementById('lang-text').innerText = isEnglish ? "Italiano" : "English";
+            const dt = document.getElementById('lang-text-desktop');
+            const mb = document.getElementById('lang-text-mobile');
+            if (dt) dt.innerText = isEnglish ? "Italiano" : "English";
+            if (mb) mb.innerText = isEnglish ? "ITA" : "ENG";
             
             // Translate the body
             traverseAndTranslate(document.body);
