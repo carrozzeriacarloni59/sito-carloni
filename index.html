@@ -1333,6 +1333,9 @@
                 // Invia i dati in background (inclusa l'immagine) a FormSubmit
                 fetch("https://formsubmit.co/ajax/angelocarloni@autocarrozzeriacarloni.it", {
                     method: "POST",
+                    headers: {
+                        'Accept': 'application/json'
+                    },
                     body: new FormData(form)
                 })
                 .then(response => response.json())
@@ -1365,10 +1368,18 @@
             });
         }
 
-        // Inizializza entrambi i moduli al caricamento
+        // Inizializza cronologia al primo caricamento
         window.addEventListener('DOMContentLoaded', () => {
             gestisciInvioForm('form-sinistri', 'fa-solid fa-paper-plane', 'Invia Pratica Sinistro', 'Pratica del sinistro registrata con successo!');
             gestisciInvioForm('form-preventivi', 'fa-solid fa-calculator', 'Richiedi Preventivo', 'Preventivo inviato con successo! Ti risponderemo entro 24 ore.');
+
+            const initialHash = window.location.hash.replace('#', '');
+            if (initialHash && document.getElementById(initialHash)) {
+                history.replaceState({ pageId: initialHash }, '', '#' + initialHash);
+                showPage(initialHash, null, false);
+            } else {
+                history.replaceState({ pageId: 'home' }, '', window.location.pathname);
+            }
         });
 
         
@@ -1404,7 +1415,17 @@
         }
 
         // Navigate between pages
-        function showPage(pageId, element) {
+                // --- GESTIONE CRONOLOGIA E TASTO INDIETRO (History API) ---
+        function updateActiveLink(pageId) {
+            const links = document.querySelectorAll('.nav-link, .submenu-link');
+            links.forEach(l => l.classList.remove('active'));
+            const matchingLink = document.querySelector(`.nav-link[onclick*="'${pageId}'"], .submenu-link[onclick*="'${pageId}'"]`);
+            if (matchingLink) {
+                matchingLink.classList.add('active');
+            }
+        }
+
+        function showPage(pageId, element, pushToHistory = true) {
             const pages = document.querySelectorAll('.page-section');
             pages.forEach(p => p.classList.remove('active'));
 
@@ -1413,26 +1434,70 @@
                 targetPage.classList.add('active');
             }
 
-            const links = document.querySelectorAll('.nav-link, .submenu-link');
-            links.forEach(l => l.classList.remove('active'));
-
             if (element) {
+                const links = document.querySelectorAll('.nav-link, .submenu-link');
+                links.forEach(l => l.classList.remove('active'));
                 element.classList.add('active');
+            } else {
+                updateActiveLink(pageId);
+            }
+
+            // Se è una sottovoce di interventi, apri il sottomenu
+            if (['riparazione', 'verniciatura', 'lucidatura'].includes(pageId)) {
+                const submenu = document.getElementById('submenu-interventi');
+                if (submenu) submenu.classList.add('open');
             }
 
             if (window.innerWidth <= 900) {
-                document.querySelector('.sidebar').classList.remove('active');
-                document.querySelector('.sidebar-overlay').classList.remove('active');
+                const sidebar = document.querySelector('.sidebar');
+                const overlay = document.querySelector('.sidebar-overlay');
+                if (sidebar) sidebar.classList.remove('active');
+                if (overlay) overlay.classList.remove('active');
             }
 
             window.scrollTo(0, 0);
             setTimeout(reveal, 50);
+
+            // Aggiunge la pagina alla cronologia del browser
+            if (pushToHistory) {
+                const currentHash = window.location.hash.replace('#', '');
+                if (currentHash !== pageId) {
+                    history.pushState({ pageId: pageId }, '', '#' + pageId);
+                }
+            }
+
+            // Notifica Google Analytics del cambio pagina/sezione (Virtual Pageview)
+            if (typeof gtag === 'function') {
+                gtag('event', 'page_view', {
+                    page_title: pageId.charAt(0).toUpperCase() + pageId.slice(1),
+                    page_path: '/' + (pageId === 'home' ? '' : '#' + pageId)
+                });
+            }
         }
 
+        // Gestione del tasto indietro / avanti dello smartphone e del browser
+        window.addEventListener('popstate', function(event) {
+            // Se il lightbox delle foto è aperto, chiudilo prima di cambiare pagina
+            const lightbox = document.getElementById('lightbox');
+            if (lightbox && lightbox.style.display === 'flex') {
+                closeLightbox(false);
+                return;
+            }
+
+            if (event.state && event.state.pageId) {
+                showPage(event.state.pageId, null, false);
+            } else {
+                const hash = window.location.hash.replace('#', '');
+                if (hash && document.getElementById(hash)) {
+                    showPage(hash, null, false);
+                } else {
+                    showPage('home', null, false);
+                }
+            }
+        });
+
         function navigateToSub(subId) {
-            const submenu = document.getElementById('submenu-interventi');
-            submenu.classList.add('open');
-            showPage(subId, null);
+            showPage(subId, null, true);
         }
 
         function filterReviews(service) {
@@ -1446,18 +1511,22 @@
             });
         }
 
-        // --- LOGICA LIGHTBOX ---
+        // --- LOGICA LIGHTBOX CON SUPPORTO TASTO INDIETRO ---
         function openLightbox(imgSrc) {
             const lightbox = document.getElementById('lightbox');
             document.getElementById('lightbox-img').src = imgSrc;
             lightbox.style.display = 'flex';
             setTimeout(() => lightbox.classList.add('show'), 10);
+            history.pushState({ isLightbox: true }, '', window.location.hash || '#');
         }
         
-        function closeLightbox() {
+        function closeLightbox(fromButton = true) {
             const lightbox = document.getElementById('lightbox');
             lightbox.classList.remove('show');
             setTimeout(() => lightbox.style.display = 'none', 300);
+            if (fromButton && history.state && history.state.isLightbox) {
+                history.back();
+            }
         }
     </script>
 
