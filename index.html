@@ -625,15 +625,15 @@
                 margin-left: 0;
                 width: 100%;
             }
-            .page-section { padding: 80px 20px 70px 20px; }
+            .page-section { padding: 80px 20px 130px 20px; }
             #home.page-section { padding: 60px 0 0 0; }
-            .page-content-padding { padding: 20px 20px 70px 20px; }
+            .page-content-padding { padding: 20px 20px 130px 20px; }
         }
     
                 /* Translation Button */
         .translate-btn {
             position: fixed;
-            bottom: 18px;
+            bottom: 78px; /* Alzato per far spazio alla radio */
             right: 25px;
             background-color: var(--primary-blue);
             color: white;
@@ -783,7 +783,7 @@
         /* Floating Quick Action Buttons */
         .quick-actions-bar {
             position: fixed;
-            bottom: 18px;
+            bottom: 78px; /* Alzato per far spazio alla radio */
             left: 75px;
             display: flex;
             align-items: center;
@@ -838,7 +838,7 @@
         @media (max-width: 900px) {
             .quick-actions-bar {
                 left: 65px;
-                bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+                bottom: calc(76px + env(safe-area-inset-bottom, 0px));
                 gap: 8px;
             }
             .quick-action-btn {
@@ -861,7 +861,7 @@
             }
 
             .translate-btn {
-                bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+                bottom: calc(76px + env(safe-area-inset-bottom, 0px));
                 right: 14px;
                 height: 38px;
                 min-width: 48px;
@@ -874,6 +874,62 @@
             .translate-btn i {
                 display: none;
             }
+        }
+
+        /* --- RADIO PLAYER BAR --- */
+        .radio-player-bar {
+            position: fixed;
+            bottom: 0;
+            left: var(--sidebar-width);
+            width: calc(100% - var(--sidebar-width));
+            height: 60px;
+            background-color: var(--primary-blue);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 25px;
+            box-shadow: 0 -4px 15px rgba(0,0,0,0.15);
+            z-index: 1100;
+            transition: left 0.3s ease, width 0.3s ease;
+            border-top: 2px solid var(--accent-red);
+        }
+        .radio-info {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            font-size: 0.95rem;
+        }
+        .radio-info strong { color: var(--white); }
+        .radio-info span { color: #a0aec0; font-size: 0.75rem; letter-spacing: 1px; text-transform: uppercase; }
+        .radio-controls {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .radio-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.8rem;
+            cursor: pointer;
+            transition: transform 0.2s, color 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .radio-btn:hover { color: var(--accent-red); transform: scale(1.1); }
+        .volume-slider { width: 80px; accent-color: var(--accent-red); }
+        
+        @media (max-width: 900px) {
+            .radio-player-bar {
+                left: 0;
+                width: 100%;
+                padding: 0 15px;
+                padding-bottom: env(safe-area-inset-bottom, 0px);
+                height: calc(60px + env(safe-area-inset-bottom, 0px));
+            }
+            .volume-slider { width: 60px; }
         }
     </style>
 </head>
@@ -960,6 +1016,26 @@
             </li>
         </ul>
     </aside>
+
+
+    <!-- RADIO PLAYER BAR -->
+    <div class="radio-player-bar">
+        <div class="radio-info">
+            <strong><i class="fa-solid fa-radio" style="color: var(--accent-red);"></i> Web Radio</strong>
+            <span>In diretta</span>
+        </div>
+        <div class="radio-controls">
+            <button class="radio-btn" id="radio-play-btn" onclick="toggleRadio()" aria-label="Play Radio">
+                <i class="fa-solid fa-circle-play"></i>
+            </button>
+            <div style="display: flex; align-items: center; gap: 8px; color: #a0aec0;">
+                <i class="fa-solid fa-volume-low" style="font-size: 1rem;"></i>
+                <input type="range" id="radio-volume" class="volume-slider" min="0" max="1" step="0.05" value="0.5" onchange="changeVolume(this.value)" oninput="changeVolume(this.value)">
+            </div>
+        </div>
+        <!-- Default stream: RDS (puoi cambiarlo con qualsiasi link streaming audio) -->
+        <audio id="live-radio" src="https://icstream.rds.radio/rds" preload="none"></audio>
+    </div>
 
     <!-- MAIN CONTENT -->
     <main class="main-content">
@@ -1741,6 +1817,32 @@
                     card.style.display = 'none';
                 }
             });
+        }
+
+
+        // --- LOGICA RADIO PLAYER ---
+        const radioAudio = document.getElementById('live-radio');
+        const radioPlayBtn = document.getElementById('radio-play-btn');
+        let isRadioPlaying = false;
+
+        function toggleRadio() {
+            if (isRadioPlaying) {
+                radioAudio.pause();
+                radioPlayBtn.innerHTML = '<i class="fa-solid fa-circle-play"></i>';
+                isRadioPlaying = false;
+            } else {
+                radioAudio.volume = document.getElementById('radio-volume').value;
+                radioAudio.play().then(() => {
+                    radioPlayBtn.innerHTML = '<i class="fa-solid fa-circle-pause"></i>';
+                    isRadioPlaying = true;
+                }).catch(err => {
+                    alert(isEnglish ? "Unable to play the radio stream." : "Impossibile riprodurre lo streaming radio.");
+                });
+            }
+        }
+
+        function changeVolume(val) {
+            radioAudio.volume = val;
         }
 
         // --- LOGICA LIGHTBOX CON SUPPORTO TASTO INDIETRO ---
