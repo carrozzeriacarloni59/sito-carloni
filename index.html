@@ -1197,11 +1197,13 @@
                 <h2 class="section-title">Richiesta Preventivo Gratuito</h2>
                 <p style="margin-bottom: 20px;">Compila tutti i campi indicati per ricevere una stima precisa sui costi ed i tempi di riparazione per la tua vettura.</p>
                 
-                <form id="form-preventivi" enctype="multipart/form-data">
+                <form id="form-preventivi" action="https://formsubmit.co/angelocarloni@autocarrozzeriacarloni.it" method="POST" enctype="multipart/form-data">
                     <!-- Configurazione base formsubmit -->
                     <input type="hidden" name="_subject" value="Nuova Richiesta Preventivo dal Sito!">
                     <input type="hidden" name="_template" value="table">
                     <input type="hidden" name="_captcha" value="false">
+                    <!-- Reindirizzamento automatico alla Home dopo l'invio -->
+                    <input type="hidden" name="_next" value="https://www.autocarrozzeriacarloni.it/?status=success">
                     
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
                         <div class="form-group">
@@ -1241,7 +1243,7 @@
                         <label>Carica Foto del Danno (Opzionale)</label>
                         <input type="file" name="Foto_Danno" class="form-control" accept="image/*" multiple>
                     </div>
-                    <button type="submit" class="btn btn-blue"><i class="fa-solid fa-calculator"></i> Richiedi Preventivo</button>
+                    <button type="submit" id="btn-submit-preventivi" class="btn btn-blue"><i class="fa-solid fa-calculator"></i> Richiedi Preventivo</button>
                 </form>
             </div>
         </section>
@@ -1512,10 +1514,34 @@
             });
         }
 
-        // Inizializza entrambi i moduli al caricamento
+        // Inizializza i moduli al caricamento
         window.addEventListener('DOMContentLoaded', () => {
+            // Controlla se torniamo da un invio nativo andato a buon fine
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('status') === 'success') {
+                // Rimuove il parametro dall'URL in modo pulito
+                window.history.replaceState({}, document.title, window.location.pathname);
+                // Mostra il popup di successo
+                setTimeout(() => {
+                    alert(isEnglish ? dict["Preventivo inviato con successo! Ti risponderemo entro 24 ore."] : "Preventivo inviato con successo! Ti risponderemo entro 24 ore.");
+                }, 100);
+            }
+
+            // Il modulo sinistri rimane in AJAX perché non ha allegati
             gestisciInvioForm('form-sinistri', 'fa-solid fa-paper-plane', 'Invia Pratica Sinistro', 'Pratica del sinistro registrata con successo!');
-            gestisciInvioForm('form-preventivi', 'fa-solid fa-calculator', 'Richiedi Preventivo', 'Preventivo inviato con successo! Ti risponderemo entro 24 ore.');
+            
+            // Il modulo preventivi usa l'invio nativo per supportare gli allegati.
+            // Aggiungiamo solo un effetto visivo di caricamento sul bottone.
+            const formPreventivi = document.getElementById('form-preventivi');
+            if (formPreventivi) {
+                formPreventivi.addEventListener('submit', function() {
+                    const btn = document.getElementById('btn-submit-preventivi');
+                    if(btn) {
+                        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Invio in corso...';
+                        btn.style.pointerEvents = 'none'; // Evita doppi click senza bloccare il form
+                    }
+                });
+            }
         });
 
         
