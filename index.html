@@ -934,13 +934,18 @@
                 </ul>
             </li>
             <li class="nav-item">
+                <a class="nav-link" onclick="showPage('preventivi', this)">
+                    <span><i class="fa-solid fa-file-invoice-dollar icon"></i> Preventivi</span>
+                </a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link" onclick="showPage('sinistri', this)">
                     <span><i class="fa-solid fa-car-burst icon"></i> Sinistri Auto</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" onclick="showPage('preventivi', this)">
-                    <span><i class="fa-solid fa-file-invoice-dollar icon"></i> Preventivi</span>
+                <a class="nav-link" onclick="showPage('rottamazione', this)">
+                    <span><i class="fa-solid fa-car-crash icon"></i> Rottamazione Auto</span>
                 </a>
             </li>
             <li class="nav-item">
@@ -1248,6 +1253,53 @@
             </div>
         </section>
 
+        <!-- PAGE: ROTTAMAZIONE AUTO -->
+        <section id="rottamazione" class="page-section">
+            <div class="card reveal">
+                <h2 class="section-title">Pratica Rottamazione Auto</h2>
+                <p style="margin-bottom: 20px;">Compila il modulo sottostante per avviare la pratica di rottamazione del tuo veicolo. Ci occupiamo del ritiro, della radiazione al PRA e della consegna del certificato definitivo nel pieno rispetto delle normative.</p>
+                
+                <form id="form-rottamazione" action="https://formsubmit.co/angelocarloni@autocarrozzeriacarloni.it" method="POST" enctype="multipart/form-data">
+                    <!-- Configurazione base formsubmit -->
+                    <input type="hidden" name="_subject" value="Nuova Richiesta Rottamazione Auto dal Sito!">
+                    <input type="hidden" name="_template" value="table">
+                    <input type="hidden" name="_captcha" value="false">
+                    <!-- Reindirizzamento automatico alla Home dopo l'invio -->
+                    <input type="hidden" name="_next" value="https://www.autocarrozzeriacarloni.it/?status=success_rottamazione">
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                        <div class="form-group">
+                            <label>Nome e Cognome del Proprietario *</label>
+                            <input type="text" name="Proprietario" class="form-control" required placeholder="Mario Rossi">
+                        </div>
+                        <div class="form-group">
+                            <label>Telefono di Contatto *</label>
+                            <input type="tel" name="Telefono" class="form-control" required placeholder="+39 333 1234567">
+                        </div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                        <div class="form-group">
+                            <label>Marca e Modello Veicolo *</label>
+                            <input type="text" name="Modello_Veicolo" class="form-control" required placeholder="Es. Fiat Punto">
+                        </div>
+                        <div class="form-group">
+                            <label>Targa Veicolo *</label>
+                            <input type="text" name="Targa" class="form-control" required placeholder="AB 123 CD">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Stato del Veicolo / Note</label>
+                        <textarea name="Stato_Veicolo" class="form-control" rows="3" placeholder="Il veicolo è marciante? Ha subito incidenti? Si trova presso un indirizzo specifico?"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Carica Documenti / Foto Veicolo (Libretto, Certificato di Proprietà)</label>
+                        <input type="file" name="Documenti_Rottamazione" class="form-control" accept="image/*,.pdf" multiple>
+                    </div>
+                    <button type="submit" id="btn-submit-rottamazione" class="btn btn-blue"><i class="fa-solid fa-car-crash"></i> Richiedi Rottamazione</button>
+                </form>
+            </div>
+        </section>
+
         <!-- PAGE: RECENSIONI -->
         <section id="recensioni" class="page-section">
             <div class="card reveal">
@@ -1399,7 +1451,19 @@
             "Descrivi i punti danneggiati o l'intervento desiderato...": "Describe the damaged areas or the desired intervention...",
             "Pratica del sinistro registrata con successo!": "Accident claim registered successfully!",
             "Preventivo inviato con successo! Ti risponderemo entro 24 ore.": "Quote sent successfully! We will reply within 24 hours.",
-            "Vai ai dettagli completi": "Go to full details"
+            "Vai ai dettagli completi": "Go to full details",
+            "Rottamazione Auto": "Car Scrapping",
+            "Pratica Rottamazione Auto": "Car Scrapping Procedure",
+            "Compila il modulo sottostante per avviare la pratica di rottamazione del tuo veicolo. Ci occupiamo del ritiro, della radiazione al PRA e della consegna del certificato definitivo nel pieno rispetto delle normative.": "Fill out the form below to start your vehicle scrapping procedure. We take care of collection, PRA deregistration, and delivery of the final certificate in full compliance with regulations.",
+            "Nome e Cognome del Proprietario *": "Owner's Name and Surname *",
+            "Telefono di Contatto *": "Contact Phone *",
+            "Marca e Modello Veicolo *": "Vehicle Make and Model *",
+            "Targa Veicolo *": "Vehicle License Plate *",
+            "Stato del Veicolo / Note": "Vehicle Condition / Notes",
+            "Il veicolo è marciante? Ha subito incidenti? Si trova presso un indirizzo specifico?": "Is the vehicle drivable? Has it been in accidents? Is it located at a specific address?",
+            "Carica Documenti / Foto Veicolo (Libretto, Certificato di Proprietà)": "Upload Vehicle Documents / Photos (Registration, Ownership Certificate)",
+            "Richiedi Rottamazione": "Request Scrapping",
+            "Richiesta di rottamazione inviata con successo! Ti ricontatteremo al più presto.": "Scrapping request sent successfully! We will contact you soon."
         };
 
         let isEnglish = false;
@@ -1519,11 +1583,14 @@
             // Controlla se torniamo da un invio nativo andato a buon fine
             const urlParams = new URLSearchParams(window.location.search);
             if (urlParams.get('status') === 'success') {
-                // Rimuove il parametro dall'URL in modo pulito
                 window.history.replaceState({}, document.title, window.location.pathname);
-                // Mostra il popup di successo
                 setTimeout(() => {
                     alert(isEnglish ? dict["Preventivo inviato con successo! Ti risponderemo entro 24 ore."] : "Preventivo inviato con successo! Ti risponderemo entro 24 ore.");
+                }, 100);
+            } else if (urlParams.get('status') === 'success_rottamazione') {
+                window.history.replaceState({}, document.title, window.location.pathname);
+                setTimeout(() => {
+                    alert(isEnglish ? "Scrapping request sent successfully! We will contact you soon." : "Richiesta di rottamazione inviata con successo! Ti ricontatteremo al più presto.");
                 }, 100);
             }
 
@@ -1538,7 +1605,18 @@
                     const btn = document.getElementById('btn-submit-preventivi');
                     if(btn) {
                         btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Invio in corso...';
-                        btn.style.pointerEvents = 'none'; // Evita doppi click senza bloccare il form
+                        btn.style.pointerEvents = 'none';
+                    }
+                });
+            }
+
+            const formRottamazione = document.getElementById('form-rottamazione');
+            if (formRottamazione) {
+                formRottamazione.addEventListener('submit', function() {
+                    const btn = document.getElementById('btn-submit-rottamazione');
+                    if(btn) {
+                        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Invio in corso...';
+                        btn.style.pointerEvents = 'none';
                     }
                 });
             }
