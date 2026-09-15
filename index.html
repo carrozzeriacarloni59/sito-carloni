@@ -636,15 +636,15 @@
                 margin-left: 0;
                 width: 100%;
             }
-            .page-section { padding: 80px 20px 130px 20px; }
+            .page-section { padding: 80px 20px 70px 20px; }
             #home.page-section { padding: 60px 0 0 0; }
-            .page-content-padding { padding: 20px 20px 130px 20px; }
+            .page-content-padding { padding: 20px 20px 70px 20px; }
         }
     
                 /* Translation Button */
         .translate-btn {
             position: fixed;
-            bottom: 78px; /* Alzato per far spazio alla radio */
+            bottom: 78px; /* Alzato per stare sopra la barra della radio su PC */
             right: 25px;
             background-color: var(--primary-blue);
             color: white;
@@ -794,7 +794,7 @@
         /* Floating Quick Action Buttons */
         .quick-actions-bar {
             position: fixed;
-            bottom: 78px; /* Alzato per far spazio alla radio */
+            bottom: 18px;
             left: 75px;
             display: flex;
             align-items: center;
@@ -849,7 +849,7 @@
         @media (max-width: 900px) {
             .quick-actions-bar {
                 left: 65px;
-                bottom: calc(76px + env(safe-area-inset-bottom, 0px));
+                bottom: calc(16px + env(safe-area-inset-bottom, 0px));
                 gap: 8px;
             }
             .quick-action-btn {
@@ -872,7 +872,7 @@
             }
 
             .translate-btn {
-                bottom: calc(76px + env(safe-area-inset-bottom, 0px));
+                bottom: calc(16px + env(safe-area-inset-bottom, 0px));
                 right: 14px;
                 height: 38px;
                 min-width: 48px;
@@ -934,13 +934,13 @@
         
         @media (max-width: 900px) {
             .radio-player-bar {
-                left: 0;
-                width: 100%;
-                padding: 0 15px;
-                padding-bottom: env(safe-area-inset-bottom, 0px);
-                height: calc(60px + env(safe-area-inset-bottom, 0px));
+                display: none !important; /* Nascosta su smartphone */
             }
-            .volume-slider { width: 60px; }
+        }
+
+        /* --- FIX FORZATURA VISIBILITÀ COOKIEBOT --- */
+        #CookiebotWidget {
+            z-index: 999999 !important;
         }
     </style>
 </head>
