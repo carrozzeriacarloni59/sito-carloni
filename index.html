@@ -17,7 +17,7 @@
     <meta name="color-scheme" content="light">
     <meta name="theme-color" content="#f4f6f8">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <title>Autocarrozzeria Carloni | Borgo Velino</title>
+    <title>Autocarrozzeria Carloni | Borgo Velino | Rieti</title>
     <!-- SEO: Nome del sito per Google Search -->
     <meta name="description" content="Autocarrozzeria Carloni a Borgo Velino (Rieti). Riparazione danni, verniciatura a forno, lucidatura e gestione completa pratiche sinistri auto. Richiedi un preventivo gratuito!">
     <meta property="og:site_name" content="Autocarrozzeria Carloni">
@@ -1278,6 +1278,13 @@
                         <textarea name="Dinamica" class="form-control" rows="3" placeholder="Descrivi brevemente l'accaduto..."></textarea>
                     </div>
 
+                    
+                    <div class="form-group" style="margin-top: 10px;">
+                        <label style="display: flex; align-items: flex-start; gap: 10px; font-weight: 500; font-size: 0.9rem;">
+                            <input type="checkbox" name="Consenso_Privacy" required style="width: 18px; height: 18px; margin-top: 2px; cursor: pointer;">
+                            <span>Ho letto e accetto l'<a href="#" onclick="showPage('privacy', null); return false;" style="color: var(--accent-red); text-decoration: underline;">Informativa sulla Privacy</a> *</span>
+                        </label>
+                    </div>
                     <button type="submit" class="btn"><i class="fa-solid fa-paper-plane"></i> Invia Pratica Sinistro</button>
                 </form>
             </div>
@@ -1335,6 +1342,13 @@
                         <label>Carica Foto del Danno (Opzionale)</label>
                         <input type="file" name="Foto_Danno" class="form-control" accept="image/*" multiple>
                     </div>
+                    
+                    <div class="form-group" style="margin-top: 10px;">
+                        <label style="display: flex; align-items: flex-start; gap: 10px; font-weight: 500; font-size: 0.9rem;">
+                            <input type="checkbox" name="Consenso_Privacy" required style="width: 18px; height: 18px; margin-top: 2px; cursor: pointer;">
+                            <span>Ho letto e accetto l'<a href="#" onclick="showPage('privacy', null); return false;" style="color: var(--accent-red); text-decoration: underline;">Informativa sulla Privacy</a> *</span>
+                        </label>
+                    </div>
                     <button type="submit" id="btn-submit-preventivi" class="btn btn-blue"><i class="fa-solid fa-calculator"></i> Richiedi Preventivo</button>
                 </form>
             </div>
@@ -1381,6 +1395,13 @@
                     <div class="form-group">
                         <label>Carica Documenti / Foto Veicolo (Libretto, Certificato di Proprietà)</label>
                         <input type="file" name="Documenti_Rottamazione" class="form-control" accept="image/*,.pdf" multiple>
+                    </div>
+                    
+                    <div class="form-group" style="margin-top: 10px;">
+                        <label style="display: flex; align-items: flex-start; gap: 10px; font-weight: 500; font-size: 0.9rem;">
+                            <input type="checkbox" name="Consenso_Privacy" required style="width: 18px; height: 18px; margin-top: 2px; cursor: pointer;">
+                            <span>Ho letto e accetto l'<a href="#" onclick="showPage('privacy', null); return false;" style="color: var(--accent-red); text-decoration: underline;">Informativa sulla Privacy</a> *</span>
+                        </label>
                     </div>
                     <button type="submit" id="btn-submit-rottamazione" class="btn btn-blue"><i class="fa-solid fa-car-crash"></i> Richiedi Rottamazione</button>
                 </form>
@@ -1455,6 +1476,38 @@
             </div>
         </section>
 
+
+        <!-- PAGE: PRIVACY -->
+        <section id="privacy" class="page-section">
+            <div class="card reveal">
+                <h2 class="section-title">Informativa sulla Privacy Base</h2>
+                <div style="line-height: 1.6; font-size: 0.95rem;">
+                    <p style="margin-bottom: 15px;">La presente informativa descrive le modalità di gestione del sito web in riferimento al trattamento dei dati personali degli utenti che lo consultano.</p>
+                    
+                    <h4 style="margin-bottom: 10px; color: var(--primary-blue);">1. Titolare del Trattamento</h4>
+                    <p style="margin-bottom: 15px;">Il Titolare del trattamento è Autocarrozzeria Carloni, con sede in SS 4 Salaria Km 95 - Borgo Velino 02010 (RI), P. IVA: 01187880578, Email: angelocarloni@autocarrozzeriacarloni.it.</p>
+                    
+                    <h4 style="margin-bottom: 10px; color: var(--primary-blue);">2. Dati raccolti e Finalità</h4>
+                    <p style="margin-bottom: 15px;">Attraverso i moduli di contatto (Preventivi, Sinistri, Rottamazione) raccogliamo i dati strettamente necessari (es. Nome, Telefono, Targa, Foto) al solo fine di: <br>
+                    - Rispondere alle richieste di preventivo.<br>
+                    - Gestire le pratiche di sinistro auto o rottamazione come da te richiesto.<br>
+                    I dati forniti verranno utilizzati esclusivamente per queste finalità e non saranno ceduti a terzi per scopi di marketing o profilazione.</p>
+                    
+                    <h4 style="margin-bottom: 10px; color: var(--primary-blue);">3. Strumenti Terzi</h4>
+                    <p style="margin-bottom: 15px;">Il sito utilizza moduli erogati tramite FormSubmit per l'invio delle email e Google Analytics per il monitoraggio delle visite in forma aggregata. L'attivazione dei cookie statistici è subordinata al tuo consenso esplicito tramite il banner (conformità GDPR).</p>
+                    
+                    <h4 style="margin-bottom: 10px; color: var(--primary-blue);">4. Conservazione e Diritti</h4>
+                    <p style="margin-bottom: 15px;">I dati saranno conservati per il tempo strettamente necessario ad espletare la tua richiesta. Puoi in qualsiasi momento chiedere la cancellazione, la modifica o l'accesso ai tuoi dati contattandoci all'indirizzo email sopra indicato.</p>
+                    <p style="font-size: 0.85rem; color: #6c757d; margin-top: 30px;"><em>Nota: Questa è un'informativa di base per la trasparenza nei confronti degli utenti.</em></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- FOOTER -->
+        <footer style="text-align: center; padding: 20px 20px 80px 20px; font-size: 0.85rem; color: #6c757d; border-top: 1px solid var(--border-color); margin-top: 20px;">
+            &copy; 2026 Autocarrozzeria Carloni. P.IVA 01187880578. <br>
+            <a href="#" onclick="showPage('privacy', null); return false;" style="color: #6c757d; text-decoration: underline; margin-top: 8px; display: inline-block;">Informativa sulla Privacy</a>
+        </footer>
     </main>
 
     <script>
@@ -1540,6 +1593,10 @@
             "Preventivo inviato con successo! Ti risponderemo entro 24 ore.": "Quote sent successfully! We will reply within 24 hours.",
             "Vai ai dettagli completi": "Go to full details",
             "Rottamazione Auto": "Car Scrapping",
+            "Informativa sulla Privacy Base": "Basic Privacy Policy",
+            "Informativa sulla Privacy": "Privacy Policy",
+            "Ho letto e accetto l'": "I have read and accept the ",
+            " *": " *",
             "Pratica Rottamazione Auto": "Car Scrapping Procedure",
             "Compila il modulo sottostante per avviare la pratica di rottamazione del tuo veicolo. Ci occupiamo del ritiro, della radiazione al PRA e della consegna del certificato definitivo nel pieno rispetto delle normative.": "Fill out the form below to start your vehicle scrapping procedure. We take care of collection, PRA deregistration, and delivery of the final certificate in full compliance with regulations.",
             "Nome e Cognome del Proprietario *": "Owner's Name and Surname *",
