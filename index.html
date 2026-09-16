@@ -79,12 +79,26 @@
             top: 0;
             left: 0;
             height: 100vh;
-            overflow-y: auto;
             box-shadow: 4px 0 10px rgba(0, 0, 0, 0.15);
             z-index: 1000;
             display: flex;
             flex-direction: column;
             transition: transform 0.3s ease;
+        }
+
+        /* WebKit Custom Scrollbar (Chrome, Safari, Edge) applicata SOLO al menu */
+        .nav-menu::-webkit-scrollbar {
+            width: 5px; /* Sottilissima */
+        }
+        .nav-menu::-webkit-scrollbar-track {
+            background: transparent; 
+        }
+        .nav-menu::-webkit-scrollbar-thumb {
+            background-color: rgba(255, 255, 255, 0.15); /* Leggermente visibile */
+            border-radius: 10px;
+        }
+        .nav-menu::-webkit-scrollbar-thumb:hover {
+            background-color: rgba(255, 255, 255, 0.3); /* Più chiara se ci passi sopra */
         }
 
         .brand-header {
@@ -122,8 +136,12 @@
 
         .nav-menu {
             list-style: none;
-            padding: 20px 0;
+            padding: 20px 0 130px 0; /* Padding inferiore extra per far scorrere i link SOPRA i tasti fluttuanti */
             flex-grow: 1;
+            overflow-y: scroll; /* Forza la barra di scorrimento SOLO qui */
+            overflow-x: hidden;
+            scrollbar-width: thin; /* Firefox */
+            scrollbar-color: rgba(255, 255, 255, 0.15) transparent; /* Firefox */
         }
 
         .nav-item {
