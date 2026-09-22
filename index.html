@@ -393,7 +393,7 @@
         }
         
         .service-img {
-            height: 180px;
+            height: 240px; /* Rettangolo più alto su PC */
             background-size: cover;
             background-position: center;
             position: relative;
@@ -447,7 +447,7 @@
         }
 
         .gallery-item {
-            height: 180px;
+            height: 260px; /* Rettangolo più alto su PC */
             background-color: #ddd;
             border-radius: 8px;
             overflow: hidden;
@@ -658,6 +658,14 @@
             .page-section { padding: 80px 20px 70px 20px; }
             #home.page-section { padding: 60px 0 0 0; }
             .page-content-padding { padding: 20px 20px 70px 20px; }
+            
+            /* Ripristino altezza originale per le foto su smartphone per non occupare troppo spazio verticale */
+            .service-img {
+                height: 180px;
+            }
+            .gallery-item {
+                height: 180px;
+            }
         }
     
                 /* Translation Button */
