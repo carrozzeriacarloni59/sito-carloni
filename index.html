@@ -1064,7 +1064,7 @@
             </div>
         </div>
         <!-- Stream: RTL 102.5 -->
-        <audio id="live-radio" src="https://shoutcast.rtl.it/stream" preload="none"></audio>
+        <audio id="live-radio" preload="none"></audio>
     </div>
 
     <!-- MAIN CONTENT -->
@@ -1907,24 +1907,50 @@
         }
 
 
-        // --- LOGICA RADIO PLAYER ---
+        // --- LOGICA RADIO PLAYER (RTL 102.5 CON MULTI-FALLBACK) ---
         const radioAudio = document.getElementById('live-radio');
         const radioPlayBtn = document.getElementById('radio-play-btn');
         let isRadioPlaying = false;
 
+        // Lista di stream alternativi HTTPS per RTL 102.5
+        const rtlStreams = [
+            "https://stream.rtl.it/rtl1025.mp3",
+            "https://shoutcast.rtl.it/RTL1025.mp3",
+            "https://streaming.rtl.it/rtlmp3",
+            "https://shoutcast.rtl.it/stream"
+        ];
+        let currentStreamIndex = 0;
+
+        function playStreamIndex(index) {
+            if (index >= rtlStreams.length) {
+                alert(isEnglish ? "RTL 102.5 stream temporarily unavailable. Please try again later." : "Streaming RTL 102.5 temporaneamente non disponibile. Riprova più tardi.");
+                radioPlayBtn.innerHTML = '<i class="fa-solid fa-circle-play"></i>';
+                isRadioPlaying = false;
+                return;
+            }
+            radioAudio.src = rtlStreams[index];
+            radioAudio.volume = document.getElementById('radio-volume').value;
+            radioPlayBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+
+            radioAudio.play().then(() => {
+                radioPlayBtn.innerHTML = '<i class="fa-solid fa-circle-pause"></i>';
+                isRadioPlaying = true;
+            }).catch(err => {
+                console.warn("Stream RTL non raggiungibile su " + rtlStreams[index] + ", provo il prossimo...");
+                currentStreamIndex++;
+                playStreamIndex(currentStreamIndex);
+            });
+        }
+
         function toggleRadio() {
             if (isRadioPlaying) {
                 radioAudio.pause();
+                radioAudio.src = ""; // Libera il socket audio
                 radioPlayBtn.innerHTML = '<i class="fa-solid fa-circle-play"></i>';
                 isRadioPlaying = false;
             } else {
-                radioAudio.volume = document.getElementById('radio-volume').value;
-                radioAudio.play().then(() => {
-                    radioPlayBtn.innerHTML = '<i class="fa-solid fa-circle-pause"></i>';
-                    isRadioPlaying = true;
-                }).catch(err => {
-                    alert(isEnglish ? "Unable to play the radio stream." : "Impossibile riprodurre lo streaming radio.");
-                });
+                currentStreamIndex = 0;
+                playStreamIndex(currentStreamIndex);
             }
         }
 
